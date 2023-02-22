@@ -10,19 +10,19 @@ presets () {
 	declare -A preset
 	preset[kot]="xrandr --output HDMI-A-0 --right-of eDP --output eDP --primary"
 	preset[thuis]="xrandr --output HDMI-A-0 --right-of eDP --mode 1920x1080 --rate 120 --primary"	
-	local action="$(echo -e "${!preset[@]}" | tr " " "\n" | dmenu -l "${#preset[@]}" -h 24 -p "select preset")"
+	local action; action="$(echo -e "${!preset[@]}" | tr " " "\n" | dmenu -l "${#preset[@]}" -h 24 -p "select preset")"
 	${preset[$action]}
 	}
 
 primary () {
-	local action="$(echo -e "${screens_active[@]}" | tr " " "\n" | dmenu -l 3 -h 24 -p "select primary screen")"
+	local action; action="$(echo -e "${screens_active[@]}" | tr " " "\n" | dmenu -l 3 -h 24 -p "select primary screen")"
 	xrandr --output "$action" --primary && screeninfo
 	}
 
 orientation () {
 	local screen=$1
-	local primary="$(xrandr | grep primary | awk '{print $1}')"
-	local action="$(echo -e "left-of\nright-of\nsame-as" | dmenu -l 3 -h 24 -p "$primary")"
+	local primary; primary="$(xrandr | grep primary | awk '{print $1}')"
+	local action; action="$(echo -e "left-of\nright-of\nsame-as" | dmenu -l 3 -h 24 -p "$primary")"
 	xrandr --output "$screen" --"$action" "$primary" 
 	}
 
@@ -31,13 +31,13 @@ main () {
 	screeninfo
 
 	for i in "${screens[@]}"; do
-		echo "$screens_active" | grep "$i" || xrandr --output "$i" --auto
+		echo "${screens_active[@]}" | grep "$i" || xrandr --output "$i" --auto
 	done
 
 	screeninfo
 
 	while [[ $arg -eq 0 ]]; do
-		local action="$(echo -e "presets primary" "${screens_noprim[@]}" | tr " " "\n" | dmenu -l $((${#screens_noprim[@]} + 2)) -m 0 -h 24 -p "choose action")"
+		local action; action="$(echo -e "presets primary" "${screens_noprim[@]}" | tr " " "\n" | dmenu -l $((${#screens_noprim[@]} + 2)) -m 0 -h 24 -p "choose action")"
 		if [[ -n $action ]];  then
 			$action || orientation "$action"
 		else
