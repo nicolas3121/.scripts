@@ -19,7 +19,6 @@ primary () {
 	xrandr --output "$action" --primary && screeninfo
 	}
 
-
 orientation () {
 	local screen=$1
 	local primary="$(xrandr | grep primary | awk '{print $1}')"
