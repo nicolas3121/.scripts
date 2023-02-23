@@ -2,6 +2,7 @@
 
 screeninfo () {
 	mapfile -t screens < <(xrandr | grep connected | awk '{print $1}')
+	mapfile -t screens_disconnected < <(xrandr | grep disconnected | awk '{print $1}')
 	mapfile -t screens_active < <(xrandr --listactivemonitors | grep "+" | awk '{print $NF}')
 	mapfile -t screens_noprim < <(xrandr --listactivemonitors | grep "+" | grep -v 0: | awk '{print $NF}')
 	}
@@ -32,6 +33,7 @@ main () {
 
 	for i in "${screens[@]}"; do
 		echo "${screens_active[@]}" | grep "$i" || xrandr --output "$i" --auto
+		echo "${screens_disconnected[@]}" | grep "$i" && xrandr --output "$i" --auto
 	done
 
 	screeninfo
