@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+mapfile -t scripts < <(ls dirname ~/.scripts | grep dmenu | grep -v dmenu_scripts)
+action="$(echo "${scripts[@]}" | tr " " "\n" | dmenu -h 24 -l "${#scripts[@]}")"
+$action
+
