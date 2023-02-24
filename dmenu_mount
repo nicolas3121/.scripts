@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+mapfile -t drives < <(lsblk -p --raw | grep -P '(/dev/sd.\d)' | awk '{print $1}')
+choice="$(echo "${drives[@]}" | tr " " "\n" | dmenu -h 24 -l "${#drives[@]}")"
+udisksctl -b "$choice"
